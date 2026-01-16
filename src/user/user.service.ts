@@ -8,7 +8,7 @@ export class UserService {
   @Inject()
   private readonly prisma: PrismaService;
 
-  async user(
+  async findOne(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<User | null> {
     return this.prisma.user.findUnique({
