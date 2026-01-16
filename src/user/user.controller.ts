@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Body,
   Controller,
@@ -6,9 +7,11 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { User as UserModel, Prisma } from '@prisma/client';
 import { UserService } from './user.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -21,9 +24,17 @@ export class UserController {
     return this.userService.createUser(userData);
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
-  async getUserById(@Param('id') id: string): Promise<UserModel | null> {
-    return this.userService.findOne({ id: Number(id) });
+  async getUserById(
+    @Param('id') id: string,
+  ): Promise<Omit<UserModel, 'password'> | null> {
+    const user = await this.userService.findOne({ id: Number(id) });
+    if (!user) {
+      return null;
+    }
+    const { password, ...result } = user;
+    return result;
   }
 
   @Put(':id')
