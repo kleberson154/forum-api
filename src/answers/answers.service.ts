@@ -7,10 +7,10 @@ import { PrismaService } from 'src/database/prisma.service';
 export class AnswersService {
   constructor(private prisma: PrismaService) {}
 
-  create(createAnswerDto: CreateAnswerDto, userId: number, questionId: number) {
+  create(createAnswerDto: CreateAnswerDto, req: any, questionId: number) {
     const newAnswer = {
       body: createAnswerDto.body,
-      user: { connect: { id: userId } },
+      user: { connect: { id: req.userId } },
       question: { connect: { id: questionId } },
     };
     return this.prisma.answer.create({
