@@ -9,6 +9,7 @@ import {
   UseGuards,
   Request,
   ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 
 interface AuthenticatedRequest extends Request {
@@ -27,7 +28,7 @@ export class AnswersController {
   @Post(':questionId')
   create(
     @Param('questionId') questionId: string,
-    @Body() createAnswerDto: CreateAnswerDto,
+    @Body(new ValidationPipe()) createAnswerDto: CreateAnswerDto,
     @Request() req: AuthenticatedRequest,
   ) {
     return this.answersService.create(
@@ -53,7 +54,7 @@ export class AnswersController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateAnswerDto: UpdateAnswerDto,
+    @Body(new ValidationPipe()) updateAnswerDto: UpdateAnswerDto,
   ) {
     return this.answersService.update(id, updateAnswerDto);
   }

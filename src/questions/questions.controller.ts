@@ -9,6 +9,7 @@ import {
   UseGuards,
   Request,
   ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
@@ -26,7 +27,7 @@ export class QuestionsController {
   @UseGuards(AuthGuard)
   @Post()
   create(
-    @Body() createQuestionDto: CreateQuestionDto,
+    @Body(new ValidationPipe()) createQuestionDto: CreateQuestionDto,
     @Request() req: AuthenticatedRequest,
   ) {
     return this.questionsService.create(createQuestionDto, req.userId);
@@ -48,7 +49,7 @@ export class QuestionsController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateQuestionDto: UpdateQuestionDto,
+    @Body(new ValidationPipe()) updateQuestionDto: UpdateQuestionDto,
   ) {
     return this.questionsService.update(id, updateQuestionDto);
   }
